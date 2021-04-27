@@ -1,0 +1,29 @@
+version: '1'
+services:
+  springboot:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: cadastro_pessoas
+    ports:
+      - '8080:8080'
+      - '5005:5005'
+    environment:
+      - ADDITIONAL_OPTS= -Xmx1G -Xms128m -XX:MaxMetaspaceSize=128m
+      - PROFILE=dev
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    image: mysql:5.7
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_HOST=localhost
+      - MYSQL_DATABASE=pessoas_api
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./docker/volume_mysql:/var/lib/mysql
